@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import SellersView from './views/SellersView';
+
 // Example of sellers list from API
 // let sellers = [
 //   {
@@ -54,38 +56,3 @@ class App extends Component {
 }
 
 export default App;
-
-
-class SellersView extends Component {
-
-  render() {
-    return(
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.sellers.map((seller, i) => (
-            <SellerRow key={seller.id} seller={seller} />
-          ))}
-        </tbody>
-      </table>
-    );
-  }
-}
-
-
-class SellerRow extends Component {
-
-  render() {
-    return(
-      <tr>
-        <td>{this.props.seller.id}</td>
-        <td>{this.props.seller.name}</td>
-      </tr>
-    );
-  }
-}
