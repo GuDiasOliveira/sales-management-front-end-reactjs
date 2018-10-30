@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import SellersView from './views/SellersView';
+import SalesView from './views/SalesView';
 
 // Example of sellers list from API
 // let sellers = [
@@ -26,7 +26,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      sellers: []
+      sellers: [],
+      sellerSales: []
     };
     this.refresh();
     this.viewSales = this.viewSales.bind(this);
@@ -46,22 +47,54 @@ class App extends Component {
 
   viewSales(sellerId) {
     (async () => {
-      const response = await fetch('http://localhost:8081/seller/' + sellerId);
-      const body = await response.json();
+      const res = {};
+
+      // Retrieving seller
+      let response = await fetch('http://localhost:8081/seller/' + sellerId);
+      let body = await response.json();
       if (response.status !== 200) {
         throw new Error(body.message);
       }
-      return body;
-    })().then(res => JSON.stringify(res, null, 2))
-      .then(res => alert(res));
+      res.seller = body;
+
+      // Retrieving seller's sales
+      response = await fetch('http://localhost:8081/seller/' + sellerId + '/sales');
+      body = await response.json();
+      if (response.status !== 200) {
+        throw new Error(body.message);
+      }
+      res.sales = body;
+
+      return res;
+    })().then(res => {
+      // Adapting data to react state to show
+      res.sales = res.sales.map(sale => {
+        sale.date = new Date(sale.date);
+        return sale;
+      })
+      return res;
+    }).then(res => this.setState({ selectedSeller: res.seller, sellerSales: res.sales }))
+      .catch(err => {console.log(err); alert('Failed to retrive sales');});
+  }
+
+  renderSellerSales() {
+    return(
+      <div style={{float: 'left'}}>
+        {this.state.selectedSeller ? <h1>{this.state.selectedSeller.name}'s sales</h1> : ''}
+        <SalesView sales={this.state.sellerSales} />
+      </div>
+    )
   }
 
   render() {
     return (
       <div className="App">
         <main>
-          <h1>Sellers:</h1>
-          <SellersView sellers={this.state.sellers} onSeeSales={this.viewSales} />
+          <div style={{float: 'left'}}>
+            <h1>Sellers:</h1>
+            <SellersView sellers={this.state.sellers} onSeeSales={this.viewSales} />
+          </div>
+          {this.renderSellerSales()}
         </main>
       </div>
     );
