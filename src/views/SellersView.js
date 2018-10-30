@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
-import MoneyIcon from '@material-ui/icons/RemoveRedEye';
+import EyeIcon from '@material-ui/icons/RemoveRedEye';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -93,7 +93,7 @@ class SellerRow extends Component {
         <TableCell>{this.props.seller.name}</TableCell>
         <TableCell>
           <IconButton color='primary' variant='contained' onClick={this.handleClickSeeSales}>
-            <MoneyIcon />
+            <EyeIcon />
           </IconButton>
         </TableCell>
       </TableRow>

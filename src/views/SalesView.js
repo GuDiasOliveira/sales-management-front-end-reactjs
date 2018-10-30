@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -81,6 +84,11 @@ class SaleRow extends Component {
         <TableCell>{this.props.sale.id}</TableCell>
         <TableCell>{this.props.sale.date.toLocaleString()}</TableCell>
         <TableCell>$ {this.props.sale.value.toFixed(2)}</TableCell>
+        <TableCell>
+          <IconButton color='secondary' variant='contained' onClick={this.handleClickDelete}>
+            <DeleteIcon />
+          </IconButton>
+        </TableCell>
       </TableRow>
     );
   }

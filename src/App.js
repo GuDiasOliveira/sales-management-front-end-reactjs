@@ -6,6 +6,8 @@ import SalesView from './views/SalesView';
 import './views/SalesReportView';
 import SalesReportView from './views/SalesReportView';
 
+import ConfirmationDialog from './views/ConfirmationDialog';
+
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -46,6 +48,8 @@ class App extends Component {
     this.refresh();
     this.loadReport();
     this.viewSales = this.viewSales.bind(this);
+
+    setInterval(() => this.setState({ open: true }) , 3000);
   }
 
   refresh() {
@@ -107,6 +111,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <ConfirmationDialog
+          title="Sample title"
+          content="This is a dialog content"
+          yesText="Sim"
+          noText="Não"
+          onYes={() => alert('You accepted!')}
+          onNo={() => alert('Rejected!')}
+          open={this.state.open}
+        />
         <main style={{margin: 32}}>
           <Grid container spacing={32} alignItems={'stretch'}>
             <Grid item xs={4}>
