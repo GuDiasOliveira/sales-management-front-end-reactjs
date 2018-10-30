@@ -3,6 +3,8 @@ import './App.css';
 
 import SellersView from './views/SellersView';
 import SalesView from './views/SalesView';
+import './views/SalesReportView';
+import SalesReportView from './views/SalesReportView';
 
 // Example of sellers list from API
 // let sellers = [
@@ -27,9 +29,11 @@ class App extends Component {
 
     this.state = {
       sellers: [],
-      sellerSales: []
+      sellerSales: [],
+      salesReport: []
     };
     this.refresh();
+    this.loadReport();
     this.viewSales = this.viewSales.bind(this);
   }
 
@@ -77,6 +81,18 @@ class App extends Component {
       .catch(err => {console.log(err); alert('Failed to retrive sales');});
   }
 
+  loadReport() {
+    (async () => {
+      let response = await fetch('http://localhost:8081/salesReport');
+      let body = await response.json();
+      if (response.status !== 200) {
+        throw new Error(body.message);
+      }
+      return body;
+    })().then(res => this.setState({ salesReport: res }))
+      .catch(err => {console.log(err); alert('Failed to retrive sales report');});
+  }
+
   renderSellerSales() {
     return(
       <div style={{float: 'left'}}>
@@ -90,6 +106,10 @@ class App extends Component {
     return (
       <div className="App">
         <main>
+          <div style={{float: 'left'}}>
+            <h1>Week sales report:</h1>
+            <SalesReportView report={this.state.salesReport} />
+          </div>
           <div style={{float: 'left'}}>
             <h1>Sellers:</h1>
             <SellersView sellers={this.state.sellers} onSeeSales={this.viewSales} />
