@@ -1,23 +1,31 @@
 import React, { Component } from 'react';
 
+import Button from '@material-ui/core/Button';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 
 export default class SellersView extends Component {
 
   render() {
     return(
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Name</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {this.props.sellers.map((seller, i) => (
             <SellerRow key={seller.id} seller={seller} onSeeSales={this.props.onSeeSales} />
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     );
   }
 }
@@ -36,13 +44,13 @@ class SellerRow extends Component {
 
   render() {
     return(
-      <tr>
-        <td>{this.props.seller.id}</td>
-        <td>{this.props.seller.name}</td>
-        <td>
-          <button onClick={this.handleClickSeeSales}>Report sales</button>
-        </td>
-      </tr>
+      <TableRow>
+        <TableCell>{this.props.seller.id}</TableCell>
+        <TableCell>{this.props.seller.name}</TableCell>
+        <TableCell>
+          <Button color='primary' variant='contained' onClick={this.handleClickSeeSales}>Report sales</Button>
+        </TableCell>
+      </TableRow>
     );
   }
 }

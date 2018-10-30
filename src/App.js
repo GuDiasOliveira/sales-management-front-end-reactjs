@@ -6,6 +6,11 @@ import SalesView from './views/SalesView';
 import './views/SalesReportView';
 import SalesReportView from './views/SalesReportView';
 
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+
 // Example of sellers list from API
 // let sellers = [
 //   {
@@ -21,6 +26,12 @@ import SalesReportView from './views/SalesReportView';
 //     "name": "Maria Letícia Mourão"
 //   }
 // ];
+
+// const styles = theme => ({
+//   card: {
+//     float: 'left'
+//   }
+// });
 
 class App extends Component {
 
@@ -96,19 +107,38 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <main>
-          <div style={{float: 'left'}}>
-            <h1>Week sales report:</h1>
-            <SalesReportView report={this.state.salesReport} />
-          </div>
-          <div style={{float: 'left'}}>
-            <h1>Sellers:</h1>
-            <SellersView sellers={this.state.sellers} onSeeSales={this.viewSales} />
-          </div>
-          <div style={{float: 'left'}}>
-            {this.state.selectedSeller ? <h1>{this.state.selectedSeller.name}'s sales</h1> : ''}
-            <SalesView sales={this.state.sellerSales} />
-          </div>
+        <main style={{margin: 32}}>
+          <Grid container spacing={32} alignItems={'stretch'}>
+            <Grid item xs={4}>
+              <Card>
+                <CardHeader title={'Week sales report'} />
+                <CardContent>
+                  <SalesReportView report={this.state.salesReport} />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={4}>
+              <Card>
+                <CardHeader title={'Sellers'} />
+                <CardContent>
+                  <SellersView sellers={this.state.sellers} onSeeSales={this.viewSales} />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={4}>
+              <Card>
+                {this.state.selectedSeller
+                ?
+                  <CardHeader title={`${this.state.selectedSeller.name}'s sales`} />
+                :
+                  ''
+                }
+                <CardContent>
+                  <SalesView sales={this.state.sellerSales} />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         </main>
       </div>
     );

@@ -1,24 +1,30 @@
 import React, { Component } from 'react';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 
 export default class SalesReportView extends Component {
   
   render() {
     return(
-      <table>
-        <thead>
-          <tr>
-            <th>Seller ID</th>
-            <th>Seller name</th>
-            <th>Daily sales average</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Seller ID</TableCell>
+            <TableCell>Seller name</TableCell>
+            <TableCell>Daily sales average</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {this.props.report.map((reportItem, i) => (
             <SalesReportRow key={reportItem.seller.id} reportItem={reportItem} />
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     );
   }
 }
@@ -28,11 +34,11 @@ class SalesReportRow extends Component {
   
   render() {
     return(
-      <tr>
-        <td>{this.props.reportItem.seller.id}</td>
-        <td>{this.props.reportItem.seller.name}</td>
-        <td>{this.props.reportItem.dailySalesAverage}</td>
-      </tr>
+      <TableRow>
+        <TableCell>{this.props.reportItem.seller.id}</TableCell>
+        <TableCell>{this.props.reportItem.seller.name}</TableCell>
+        <TableCell>{this.props.reportItem.dailySalesAverage}</TableCell>
+      </TableRow>
     );
   }
 }
