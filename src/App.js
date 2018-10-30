@@ -93,15 +93,6 @@ class App extends Component {
       .catch(err => {console.log(err); alert('Failed to retrive sales report');});
   }
 
-  renderSellerSales() {
-    return(
-      <div style={{float: 'left'}}>
-        {this.state.selectedSeller ? <h1>{this.state.selectedSeller.name}'s sales</h1> : ''}
-        <SalesView sales={this.state.sellerSales} />
-      </div>
-    )
-  }
-
   render() {
     return (
       <div className="App">
@@ -114,7 +105,10 @@ class App extends Component {
             <h1>Sellers:</h1>
             <SellersView sellers={this.state.sellers} onSeeSales={this.viewSales} />
           </div>
-          {this.renderSellerSales()}
+          <div style={{float: 'left'}}>
+            {this.state.selectedSeller ? <h1>{this.state.selectedSeller.name}'s sales</h1> : ''}
+            <SalesView sales={this.state.sellerSales} />
+          </div>
         </main>
       </div>
     );
