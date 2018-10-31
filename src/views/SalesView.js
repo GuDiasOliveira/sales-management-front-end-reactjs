@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,6 +14,7 @@ import TablePaginationActions from '@material-ui/core/TablePaginationActions';
 import PropTypes from 'prop-types';
 
 import ConfirmationDialog from './ConfirmationDialog';
+import SaleDataDialog from './SaleDataDialog';
 
 
 TablePaginationActions.propTypes = {
@@ -83,7 +84,8 @@ class SaleRow extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      deleteDialogOpen: false
+      deleteDialogOpen: false,
+      editDialogOpen: false,
     };
   }
 
@@ -106,6 +108,9 @@ class SaleRow extends Component {
         <TableCell>{this.props.sale.date.toLocaleString()}</TableCell>
         <TableCell>$ {this.props.sale.value.toFixed(2)}</TableCell>
         <TableCell>
+          <IconButton color='primary' variant='contained' onClick={() => this.setState({ editDialogOpen: true })}>
+            <EditIcon />
+          </IconButton>
           <IconButton color='secondary' variant='contained' onClick={() => this.setState({ deleteDialogOpen: true })}>
             <DeleteIcon />
           </IconButton>
@@ -116,6 +121,12 @@ class SaleRow extends Component {
           onYes={this.handleDeleteSale}
           onNo={() => {}}
           open={this.state.deleteDialogOpen}
+        />
+        <SaleDataDialog
+          open={this.state.editDialogOpen}
+          sale={this.props.sale}
+          onDataChange={this.props.onDataChange}
+          onDoClose={() => this.setState({ editDialogOpen: false })}
         />
       </TableRow>
     );

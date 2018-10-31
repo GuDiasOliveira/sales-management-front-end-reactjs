@@ -20,8 +20,8 @@ class SaleDataDialog extends React.Component {
         value: 0.0,
         seller: this.props.seller
       }),
-      saleDate: dateFormat(new Date(), 'yyyy-mm-dd')
     };
+    this.state.saleDate = dateFormat(this.state.sale.date, 'yyyy-mm-dd');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -44,7 +44,8 @@ class SaleDataDialog extends React.Component {
   handleDateChange = event => {
     const { sale } = this.state;
     try {
-      sale.date = new Date(event.target.value);
+      const dateToSet = event.target.value.split('-');
+      sale.date = new Date(dateToSet[0], +dateToSet[1] - 1, dateToSet[2]);
     } catch {
     }
     this.setState({ sale, saleDate: event.target.value });
@@ -90,6 +91,7 @@ class SaleDataDialog extends React.Component {
           <TextField
             type="currency"
             label="Value $"
+            value={this.state.sale.value.toString()}
             onChange={this.handleDataChange('value')}
           />
         </DialogContent>
