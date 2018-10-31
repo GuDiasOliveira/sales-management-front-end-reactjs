@@ -124,7 +124,7 @@ class App extends Component {
               <Card>
                 <CardHeader title={'Sellers'} />
                 <CardContent>
-                  <SellersView sellers={this.state.sellers} onSeeSales={this.viewSales} />
+                  <SellersView sellers={this.state.sellers} onSeeSales={this.viewSales} onDataChange={() => this.refresh()} />
                 </CardContent>
               </Card>
             </Grid>

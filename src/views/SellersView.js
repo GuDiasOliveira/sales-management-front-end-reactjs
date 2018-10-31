@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
-import EyeIcon from '@material-ui/icons/RemoveRedEye';
+import { RemoveRedEye, Edit } from '@material-ui/icons';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,7 +11,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TablePaginationActions from '@material-ui/core/TablePaginationActions';
+
 import PropTypes from 'prop-types';
+
+import SellerDataDialog from './SellerDataDialog';
 
 
 TablePaginationActions.propTypes = {
@@ -50,7 +53,7 @@ export default class SellersView extends Component {
         </TableHead>
         <TableBody>
           {this.props.sellers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((seller, i) => (
-            <SellerRow key={seller.id} seller={seller} onSeeSales={this.props.onSeeSales} />
+            <SellerRow key={seller.id} seller={seller} onSeeSales={this.props.onSeeSales} onDataChange={this.props.onDataChange} />
           ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 57 * emptyRows }}>
@@ -74,12 +77,24 @@ export default class SellersView extends Component {
   }
 }
 
+SellersView.propTypes = {
+  sellers: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string
+  })),
+  onSeeSales: PropTypes.func.isRequired,
+  onDataChange: PropTypes.func.isRequired,
+}
+
 
 class SellerRow extends Component {
 
   constructor(props) {
     super(props);
     this.handleClickSeeSales = this.handleClickSeeSales.bind(this);
+    this.state = {
+      editDialogOpen: false,
+    }
   }
 
   handleClickSeeSales(e) {
@@ -93,10 +108,27 @@ class SellerRow extends Component {
         <TableCell>{this.props.seller.name}</TableCell>
         <TableCell>
           <IconButton color='primary' variant='contained' onClick={this.handleClickSeeSales}>
-            <EyeIcon />
+            <RemoveRedEye />
+          </IconButton>
+          <IconButton color='primary' variant='contained' onClick={() => this.setState({ editDialogOpen: true })}>
+            <Edit />
           </IconButton>
         </TableCell>
+        <SellerDataDialog
+          open={this.state.editDialogOpen}
+          seller={this.props.seller}
+          onDataChange={this.props.onDataChange}
+          onDoClose={() => this.setState({ editDialogOpen: false })} />
       </TableRow>
     );
   }
+}
+
+SellerRow.propTypes = {
+  seller: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string
+  }),
+  onSeeSales: PropTypes.func.isRequired,
+  onDataChange: PropTypes.func.isRequired,
 }
