@@ -3,10 +3,7 @@ import './App.css';
 
 import SellersView from './views/SellersView';
 import SalesView from './views/SalesView';
-import './views/SalesReportView';
 import SalesReportView from './views/SalesReportView';
-
-import ConfirmationDialog from './views/ConfirmationDialog';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -46,10 +43,8 @@ class App extends Component {
       salesReport: []
     };
     this.refresh();
-    this.loadReport();
     this.viewSales = this.viewSales.bind(this);
-
-    setInterval(() => this.setState({ open: true }) , 3000);
+    this.refresh = this.refresh.bind(this);
   }
 
   refresh() {
@@ -61,7 +56,11 @@ class App extends Component {
       }
       return body;
     })().then(res => this.setState({sellers: res}))
-      .catch(err => {console.log(err); alert('Failed to retrive the sellers');});
+    .catch(err => {console.log(err); alert('Failed to retrive the sellers');});
+    
+    this.loadReport();
+    if (this.state.selectedSeller)
+      this.viewSales(this.state.selectedSeller.id);
   }
 
   viewSales(sellerId) {
@@ -111,15 +110,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ConfirmationDialog
-          title="Sample title"
-          content="This is a dialog content"
-          yesText="Sim"
-          noText="Não"
-          onYes={() => alert('You accepted!')}
-          onNo={() => alert('Rejected!')}
-          open={this.state.open}
-        />
         <main style={{margin: 32}}>
           <Grid container spacing={32} alignItems={'stretch'}>
             <Grid item xs={4}>
@@ -147,7 +137,7 @@ class App extends Component {
                   ''
                 }
                 <CardContent>
-                  <SalesView sales={this.state.sellerSales} />
+                  <SalesView sales={this.state.sellerSales} onDataChange={() => this.refresh()} />
                 </CardContent>
               </Card>
             </Grid>

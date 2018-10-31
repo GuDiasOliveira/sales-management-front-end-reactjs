@@ -13,6 +13,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TablePaginationActions from '@material-ui/core/TablePaginationActions';
 import PropTypes from 'prop-types';
 
+import ConfirmationDialog from './ConfirmationDialog';
+
 
 TablePaginationActions.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -51,7 +53,7 @@ export default class SalesView extends Component {
         </TableHead>
         <TableBody>
           {this.props.sales.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((sale, i) => (
-            <SaleRow key={sale.id} sale={sale} />
+            <SaleRow key={sale.id} sale={sale} onDataChange={this.props.onDataChange} />
           ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 48 * emptyRows }}>
@@ -78,6 +80,25 @@ export default class SalesView extends Component {
 
 class SaleRow extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      deleteDialogOpen: false
+    };
+  }
+
+  handleDeleteSale = () => {
+    (async () => {
+      let response = await fetch('http://localhost:8081/sale/' + this.props.sale.id, {
+        method: 'DELETE',
+      });
+      if (response.status !== 200) {
+        throw new Error('Failed to delete the sale with id ' + this.props.sale.id);
+      }
+    })().then(() => this.props.onDataChange()).catch(err => console.error(err));
+    this.setState({ deleteDialogOpen: false });
+  }
+
   render() {
     return(
       <TableRow>
@@ -85,10 +106,17 @@ class SaleRow extends Component {
         <TableCell>{this.props.sale.date.toLocaleString()}</TableCell>
         <TableCell>$ {this.props.sale.value.toFixed(2)}</TableCell>
         <TableCell>
-          <IconButton color='secondary' variant='contained' onClick={this.handleClickDelete}>
+          <IconButton color='secondary' variant='contained' onClick={() => this.setState({ deleteDialogOpen: true })}>
             <DeleteIcon />
           </IconButton>
         </TableCell>
+        <ConfirmationDialog
+          title="Delete sale?"
+          content="Are you sure?"
+          onYes={this.handleDeleteSale}
+          onNo={() => {}}
+          open={this.state.deleteDialogOpen}
+        />
       </TableRow>
     );
   }
