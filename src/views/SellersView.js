@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
-import { RemoveRedEye, Edit, Add } from '@material-ui/icons';
+import { RemoveRedEye, Edit, Add, Delete } from '@material-ui/icons';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 
 import SellerDataDialog from './SellerDataDialog';
 import SaleDataDialog from './SaleDataDialog';
+import ConfirmationDialog from './ConfirmationDialog';
 
 
 TablePaginationActions.propTypes = {
@@ -96,11 +97,24 @@ class SellerRow extends Component {
     this.state = {
       editDialogOpen: false,
       newSaleDialogOpen: false,
+      deleteDialogOpen: false,
     }
   }
 
   handleClickSeeSales(e) {
     this.props.onSeeSales(this.props.seller.id);
+  }
+
+  handleDeleteSeller = () => {
+    (async () => {
+      let response = await fetch('http://localhost:8081/seller/' + this.props.seller.id, {
+        method: 'DELETE',
+      });
+      if (response.status !== 200) {
+        throw new Error('Failed to delete the seller with id ' + this.props.seller.id);
+      }
+    })().then(() => this.props.onDataChange()).catch(err => console.error(err));
+    this.setState({ deleteDialogOpen: false });
   }
 
   render() {
@@ -118,6 +132,9 @@ class SellerRow extends Component {
           <IconButton color='primary' variant='contained' onClick={() => this.setState({ newSaleDialogOpen: true })}>
             <Add />
           </IconButton>
+          <IconButton color='secondary' variant='contained' onClick={() => this.setState({ deleteDialogOpen: true })}>
+            <Delete />
+          </IconButton>
         </TableCell>
         <SellerDataDialog
           open={this.state.editDialogOpen}
@@ -129,6 +146,13 @@ class SellerRow extends Component {
           seller={this.props.seller}
           onDataChange={this.props.onDataChange}
           onDoClose={() => this.setState({ newSaleDialogOpen: false })} />
+          <ConfirmationDialog
+            title="Delete seller?"
+            content="Are you sure?"
+            onYes={this.handleDeleteSeller}
+            onNo={() => {}}
+            open={this.state.deleteDialogOpen}
+          />
       </TableRow>
     );
   }
