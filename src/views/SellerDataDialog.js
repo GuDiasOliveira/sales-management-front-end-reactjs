@@ -21,6 +21,15 @@ class SellerDataDialog extends React.Component {
   
   componentWillReceiveProps(nextProps) {
     this.setState({ open: nextProps.open || false });
+    if (!nextProps.open && !this.state.seller.id) {
+      const { seller } = this.state;
+      seller.name = '';
+      this.setState({ seller });
+    }
+    if (nextProps.open) {
+      const seller = Object.assign({}, nextProps.seller);
+      this.setState({ seller });
+    }
   }
 
   handleDataChange = field => event => {
@@ -30,7 +39,7 @@ class SellerDataDialog extends React.Component {
   }
 
   handleSubmit = () => {
-    const { seller } = this.state;
+    const seller = Object.assign({}, this.state.seller);
     const { id } = seller;
     delete seller.id;
     (async () => {

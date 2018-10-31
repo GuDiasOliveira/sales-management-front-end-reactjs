@@ -5,10 +5,18 @@ import SellersView from './views/SellersView';
 import SalesView from './views/SalesView';
 import SalesReportView from './views/SalesReportView';
 
+import SellerDataDialog from './views/SellerDataDialog';
+
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
+
+import { Add as AddIcon } from '@material-ui/icons'
+
+import { Button } from '@material-ui/core';
+
+import { withStyles } from '@material-ui/core/styles';
 
 // Example of sellers list from API
 // let sellers = [
@@ -26,11 +34,13 @@ import Grid from '@material-ui/core/Grid';
 //   }
 // ];
 
-// const styles = theme => ({
-//   card: {
-//     float: 'left'
-//   }
-// });
+const styles = theme => ({
+  addFab: {
+    position: 'absolute',
+    bottom: theme.spacing.unit * 5,
+    right: theme.spacing.unit * 5,
+  }
+});
 
 class App extends Component {
 
@@ -40,7 +50,8 @@ class App extends Component {
     this.state = {
       sellers: [],
       sellerSales: [],
-      salesReport: []
+      salesReport: [],
+      addDialogOpen: false
     };
     this.refresh();
     this.viewSales = this.viewSales.bind(this);
@@ -142,10 +153,17 @@ class App extends Component {
               </Card>
             </Grid>
           </Grid>
+          <Button variant="fab" color="primary" className={this.props.classes.addFab} onClick={() => this.setState({ addDialogOpen: true })}>
+            <AddIcon />
+          </Button>
+          <SellerDataDialog
+            open={this.state.addDialogOpen}
+            onDataChange={() => this.refresh()}
+            onDoClose={() => this.setState({ addDialogOpen: false })} />
         </main>
       </div>
     );
   }
 }
 
-export default App;
+export default withStyles(styles, { withTheme: true })(App);
