@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
-import { RemoveRedEye, Edit } from '@material-ui/icons';
+import { RemoveRedEye, Edit, Add } from '@material-ui/icons';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,6 +15,7 @@ import TablePaginationActions from '@material-ui/core/TablePaginationActions';
 import PropTypes from 'prop-types';
 
 import SellerDataDialog from './SellerDataDialog';
+import SaleDataDialog from './SaleDataDialog';
 
 
 TablePaginationActions.propTypes = {
@@ -94,6 +95,7 @@ class SellerRow extends Component {
     this.handleClickSeeSales = this.handleClickSeeSales.bind(this);
     this.state = {
       editDialogOpen: false,
+      newSaleDialogOpen: false,
     }
   }
 
@@ -113,12 +115,20 @@ class SellerRow extends Component {
           <IconButton color='primary' variant='contained' onClick={() => this.setState({ editDialogOpen: true })}>
             <Edit />
           </IconButton>
+          <IconButton color='primary' variant='contained' onClick={() => this.setState({ newSaleDialogOpen: true })}>
+            <Add />
+          </IconButton>
         </TableCell>
         <SellerDataDialog
           open={this.state.editDialogOpen}
           seller={this.props.seller}
           onDataChange={this.props.onDataChange}
           onDoClose={() => this.setState({ editDialogOpen: false })} />
+        <SaleDataDialog
+          open={this.state.newSaleDialogOpen}
+          seller={this.props.seller}
+          onDataChange={this.props.onDataChange}
+          onDoClose={() => this.setState({ newSaleDialogOpen: false })} />
       </TableRow>
     );
   }
